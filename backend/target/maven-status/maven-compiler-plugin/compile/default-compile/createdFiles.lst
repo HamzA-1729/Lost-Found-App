@@ -1,0 +1,5 @@
+com\lostandfound\model\Item.class
+com\lostandfound\controller\ItemController.class
+com\lostandfound\Application.class
+com\lostandfound\service\ItemService.class
+com\lostandfound\repository\ItemRepository.class
