@@ -6,7 +6,7 @@
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   margin: 20px auto;
-  min-height: 60vh; /* Adjust to a smaller value so it fits well */
+  min-height: 70vh; /* Adjusted for a bit more height */
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Prevent space between fields */
@@ -20,21 +20,69 @@
   text-align: center;
   color: #333;
   flex-shrink: 0; /* Prevents the header from shrinking */
+  font-weight: 600;
 }
 
 /* Form Fields */
 .report-item-form label {
   font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
 }
 
+/* Inputs and Textarea */
 .report-item-form input,
-.report-item-form textarea {
-  padding: 10px;
+.report-item-form textarea,
+.report-item-form select {
+  padding: 12px 14px;
   font-size: 1rem;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 15px;
+  border-radius: 6px;
+  margin-bottom: 18px;
   width: 100%; /* Ensure inputs stretch to fit container */
+  transition: all 0.3s ease; /* Smooth transitions */
+}
+
+/* On focus input and select box border color change */
+.report-item-form input:focus,
+.report-item-form textarea:focus,
+.report-item-form select:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Color Picker */
+.report-item-form input[type="color"] {
+  padding: 0;
+  border: none;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.report-item-form input[type="color"]:hover {
+  cursor: pointer;
+}
+
+/* Date and Time Inputs */
+.report-item-form input[type="date"],
+.report-item-form input[type="time"] {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: all 0.3s ease;
+}
+
+.report-item-form input[type="date"]:focus,
+.report-item-form input[type="time"]:focus {
+  border-color: #4caf50;
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.3);
 }
 
 /* Button Styling */
@@ -43,14 +91,16 @@
   color: white;
   padding: 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1.1rem;
   cursor: pointer;
   width: 100%; /* Button stretches to fill the form width */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .report-item-form button:hover {
   background-color: #45a049;
+  transform: translateY(-2px); /* Smooth hover effect */
 }
 
 /* Optional Status Message Styling */
@@ -60,38 +110,8 @@
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 20px;
-}
-
-/* Adjust the layout for smaller screens */
-@media (max-width: 768px) {
-  .report-item-form {
-    padding: 15px;
-    min-height: 70vh; /* Allow a bit more height on smaller screens */
-  }
-
-  .report-item-form h2 {
-    font-size: 1.5rem;
-  }
-
-  .report-item-form label {
-    font-size: 1rem;
-  }
-
-  .report-item-form input,
-  .report-item-form textarea {
-    font-size: 0.95rem;
-  }
-
-  .report-item-form button {
-    font-size: 1rem;
-  }
-}
-.status-message {
-  margin-top: 10px;
-  padding: 10px;
   text-align: center;
   font-size: 16px;
-  border-radius: 5px;
 }
 
 .status-message.success {
@@ -104,4 +124,30 @@
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 768px) {
+  .report-item-form {
+    padding: 15px;
+    min-height: 80vh; /* Allow a bit more height on smaller screens */
+  }
+
+  .report-item-form h2 {
+    font-size: 1.6rem;
+  }
+
+  .report-item-form label {
+    font-size: 1rem;
+  }
+
+  .report-item-form input,
+  .report-item-form textarea,
+  .report-item-form select {
+    font-size: 0.95rem;
+  }
+
+  .report-item-form button {
+    font-size: 1rem;
+  }
 }
