@@ -1,5 +1,8 @@
 com\lostandfound\model\Item.class
+com\lostandfound\repository\CustomItemRepositoryImpl.class
 com\lostandfound\controller\ItemController.class
 com\lostandfound\Application.class
 com\lostandfound\service\ItemService.class
 com\lostandfound\repository\ItemRepository.class
+com\lostandfound\config\WebConfig.class
+com\lostandfound\repository\CustomItemRepository.class
