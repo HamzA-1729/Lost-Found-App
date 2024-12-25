@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import "../styles/ReportItemForm.css";
 
-const ReportFoundItemPage = () => {
+const ReportLostItemPage = () => {
   const [itemName, setItemName] = useState("");
   const [itemDescription, setItemDescription] = useState("");
   const [itemLocation, setItemLocation] = useState("");
+  const [itemImage, setItemImage] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate(); // Hook to manage redirection
+
+  const handleImageChange = (e) => {
+    setItemImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +22,9 @@ const ReportFoundItemPage = () => {
     formData.append("name", itemName);
     formData.append("description", itemDescription);
     formData.append("location", itemLocation);
+    if (itemImage) {
+      formData.append("image", itemImage);
+    }
 
     try {
       const response = await fetch(
@@ -83,6 +91,10 @@ const ReportFoundItemPage = () => {
             required
           />
         </label>
+        <label>
+          Upload Picture (Optional):
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </label>
         <button type="submit" className="submit-button">
           Report Lost Item
         </button>
@@ -91,4 +103,4 @@ const ReportFoundItemPage = () => {
   );
 };
 
-export default ReportFoundItemPage;
+export default ReportLostItemPage;

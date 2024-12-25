@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate } from "react-router-dom";
 import "../styles/ReportItemForm.css";
 
 const ReportFoundItemPage = () => {
@@ -9,7 +9,7 @@ const ReportFoundItemPage = () => {
   const [itemImage, setItemImage] = useState(null);
   const [statusMessage, setStatusMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  const navigate = useNavigate(); // Hook to manage redirection
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     setItemImage(e.target.files[0]);
@@ -18,7 +18,6 @@ const ReportFoundItemPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Create form data object
     const formData = new FormData();
     formData.append("name", itemName);
     formData.append("description", itemDescription);
@@ -38,24 +37,26 @@ const ReportFoundItemPage = () => {
 
       if (response.status === 201) {
         setStatusMessage("Found item reported successfully!");
-        setIsSuccess(true); // Set success flag to true
-        // Clear the form after successful submission
+        setIsSuccess(true);
+
+        // Reset form
         setItemName("");
         setItemDescription("");
         setItemLocation("");
         setItemImage(null);
 
-        // After a delay, redirect to the home page
         setTimeout(() => {
-          navigate("/"); // Redirect to home page
-        }, 2000); // 2-second delay before redirection
+          navigate("/");
+        }, 2000);
       } else {
-        const message = await response.text();
-        setStatusMessage(message);
+        const errorMessage = await response.text();
+        setStatusMessage(errorMessage);
+        setIsSuccess(false);
       }
     } catch (error) {
       console.error("Error reporting found item:", error);
       setStatusMessage("Error reporting found item.");
+      setIsSuccess(false);
     }
   };
 
