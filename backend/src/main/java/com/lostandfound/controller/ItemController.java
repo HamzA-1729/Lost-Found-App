@@ -32,16 +32,6 @@ public class ItemController {
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("location") String location,
-            @RequestParam("category") String category,
-            @RequestParam("color") String color,
-            @RequestParam("date") String date, // New date field
-            @RequestParam("time") String time, // New time field
-            @RequestParam(value = "petType", required = false) String petType,
-            @RequestParam(value = "petDescription", required = false) String petDescription,
-            @RequestParam(value = "vehicleType", required = false) String vehicleType,
-            @RequestParam(value = "vehicleMake", required = false) String vehicleMake,
-            @RequestParam(value = "vehicleModel", required = false) String vehicleModel,
-            @RequestParam(value = "vehicleNumber", required = false) String vehicleNumber,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
         Item item = new Item();
@@ -49,24 +39,9 @@ public class ItemController {
         item.setDescription(description);
         item.setLocation(location);
         item.setStatus("LOST");
-        item.setCategory(category);
-        item.setColor(color);
-        item.setDate(date); // Set the date
-        item.setTime(time); // Set the time
-
-        // Set category-specific fields
-        if (category.equals("Pets")) {
-            item.setPetType(petType);
-            item.setPetDescription(petDescription);
-        } else if (category.equals("Vehicles")) {
-            item.setVehicleType(vehicleType);
-            item.setVehicleMake(vehicleMake);
-            item.setVehicleModel(vehicleModel);
-            item.setVehicleNumber(vehicleNumber);
-        }
 
         // Handle image upload if provided
-        if (image != null && !image.isEmpty()) {
+        if (image != null) {
             String imageUrl = saveImage(image);
             item.setImageUrl(imageUrl);
         }
@@ -76,43 +51,19 @@ public class ItemController {
         return new ResponseEntity<>("Lost item reported successfully!", HttpStatus.CREATED);
     }
 
+    // Report a found item
     @PostMapping("/report-found")
     public ResponseEntity<String> reportFoundItem(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
             @RequestParam("location") String location,
-            @RequestParam("category") String category,
-            @RequestParam("color") String color,
-            @RequestParam("date") String date, // New date field
-            @RequestParam("time") String time, // New time field
-            @RequestParam(value = "petType", required = false) String petType,
-            @RequestParam(value = "petDescription", required = false) String petDescription,
-            @RequestParam(value = "vehicleType", required = false) String vehicleType,
-            @RequestParam(value = "vehicleMake", required = false) String vehicleMake,
-            @RequestParam(value = "vehicleModel", required = false) String vehicleModel,
-            @RequestParam(value = "vehicleNumber", required = false) String vehicleNumber,
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
         Item item = new Item();
         item.setName(name);
         item.setDescription(description);
         item.setLocation(location);
-        item.setStatus("LOST");
-        item.setCategory(category);
-        item.setColor(color);
-        item.setDate(date); // Set the date
-        item.setTime(time); // Set the time
-
-        // Set category-specific fields
-        if (category.equals("Pets")) {
-            item.setPetType(petType);
-            item.setPetDescription(petDescription);
-        } else if (category.equals("Vehicles")) {
-            item.setVehicleType(vehicleType);
-            item.setVehicleMake(vehicleMake);
-            item.setVehicleModel(vehicleModel);
-            item.setVehicleNumber(vehicleNumber);
-        }
+        item.setStatus("FOUND");
 
         // Handle image upload if provided
         if (image != null && !image.isEmpty()) {
@@ -122,7 +73,7 @@ public class ItemController {
 
         itemRepository.save(item);
 
-        return new ResponseEntity<>("Lost item reported successfully!", HttpStatus.CREATED);
+        return new ResponseEntity<>("Found item reported successfully!", HttpStatus.CREATED);
     }
 
     // Save the image and return the URL
@@ -149,13 +100,12 @@ public class ItemController {
         return "/uploads/" + uniqueFileName;
     }
 
-    // Search for items (by name, location, category)
+    // Updated search endpoint
     @GetMapping("/search")
-    public ResponseEntity<List<Item>> searchItems(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String location,
+    public List<Item> searchItems(
+            @RequestParam(required = false) String searchText,
             @RequestParam(required = false) String category) {
-        List<Item> items = itemService.searchItems(name, location, category);
-        return ResponseEntity.ok(items);
+
+        return itemService.searchItems(searchText, category);
     }
 }
