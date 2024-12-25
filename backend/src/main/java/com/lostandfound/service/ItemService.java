@@ -13,7 +13,7 @@ public class ItemService {
     @Autowired
     private ItemRepository repository;
 
-    public List<Item> searchItems(String name, String location) {
+    public List<Item> searchItems(String name, String location, String category) {
         if (name != null && location != null) {
             return repository.findByNameContainingIgnoreCaseAndLocationContainingIgnoreCase(name, location);
         } else if (name != null) {
