@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/SearchItemsPage.css";
 
 const SearchItemsPage = () => {
   const [filters, setFilters] = useState({
-    name: "",
-    location: "",
+    searchText: "",
+    category: "",
   });
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([
+    "Personal Items",
+    "Electronics",
+    "Clothing",
+    "Jewelry & Accessories",
+    "Documents & Cards",
+    "Bags & Luggage",
+    "Pets",
+    "Vehicles",
+    "Miscellaneous",
+  ]);
+
+  useEffect(() => {
+    if (filters.searchText) {
+      handleSearch();
+    }
+  }, [filters]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  const handleSearch = async () => {
     setLoading(true);
     setError(""); // Reset any previous error
 
@@ -42,22 +58,26 @@ const SearchItemsPage = () => {
   return (
     <div className="search-items-page">
       <h2>Search for Lost or Found Items</h2>
-      <form onSubmit={handleSearch} className="search-form">
+      <form className="search-form">
         <input
           type="text"
-          name="name"
-          placeholder="Search by item name"
-          value={filters.name}
+          name="searchText"
+          placeholder="Search by name, description, or location"
+          value={filters.searchText}
           onChange={handleInputChange}
         />
-        <input
-          type="text"
-          name="location"
-          placeholder="Search by location"
-          value={filters.location}
+        <select
+          name="category"
+          value={filters.category}
           onChange={handleInputChange}
-        />
-        <button type="submit">Search</button>
+        >
+          <option value="">Select Category</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
       </form>
 
       {loading && <p>Loading...</p>}
@@ -72,6 +92,9 @@ const SearchItemsPage = () => {
                 <p>{item.description}</p>
                 <p>
                   <strong>Location:</strong> {item.location}
+                </p>
+                <p>
+                  <strong>Category:</strong> {item.category || "Uncategorized"}
                 </p>
               </div>
             ))}
