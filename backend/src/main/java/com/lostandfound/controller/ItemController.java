@@ -6,11 +6,10 @@ import com.lostandfound.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,13 +31,20 @@ public class ItemController {
     public ResponseEntity<String> reportLostItem(
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("location") String location) {
+            @RequestParam("location") String location,
+            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
         Item item = new Item();
         item.setName(name);
         item.setDescription(description);
         item.setLocation(location);
         item.setStatus("LOST");
+
+        // Handle image upload if provided
+        if (image != null) {
+            String imageUrl = saveImage(image);
+            item.setImageUrl(imageUrl);
+        }
 
         itemRepository.save(item);
 
@@ -60,7 +66,7 @@ public class ItemController {
         item.setStatus("FOUND");
 
         // Handle image upload if provided
-        if (image != null) {
+        if (image != null && !image.isEmpty()) {
             String imageUrl = saveImage(image);
             item.setImageUrl(imageUrl);
         }
@@ -72,13 +78,29 @@ public class ItemController {
 
     // Save the image and return the URL
     private String saveImage(MultipartFile image) throws IOException {
-        String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-        Path path = Paths.get("uploads/" + fileName);
-        Files.copy(image.getInputStream(), path);
-        return "/uploads/" + fileName; // Returning the URL path
+        String originalFileName = StringUtils.cleanPath(image.getOriginalFilename());
+
+        // Generate a unique file name
+        String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
+
+        // Define the upload directory
+        Path uploadDir = Paths.get("uploads");
+
+        // Ensure the directory exists
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+
+        // Construct the file path
+        Path filePath = uploadDir.resolve(uniqueFileName);
+
+        // Save the file
+        Files.copy(image.getInputStream(), filePath);
+
+        return "/uploads/" + uniqueFileName;
     }
 
-    // Search for items (by name, description, or location)
+    // Search for items (by name or location)
     @GetMapping("/search")
     public ResponseEntity<List<Item>> searchItems(
             @RequestParam(required = false) String name,
@@ -86,5 +108,4 @@ public class ItemController {
         List<Item> items = itemService.searchItems(name, location);
         return ResponseEntity.ok(items);
     }
-
 }
