@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "../styles/SearchItemsPage.css";
 
+// Helper function to map hex color to a human-readable color name (you can extend this as needed)
+const hexToColorName = (hex) => {
+  const colorNames = {
+    "#FFFFFF": "White",
+    "#000000": "Black",
+    "#FF0000": "Red",
+    "#00FF00": "Green",
+    "#0000FF": "Blue",
+    "#FFFF00": "Yellow",
+    "#FF00FF": "Magenta",
+    "#00FFFF": "Cyan",
+    "#808080": "Gray",
+  };
+
+  return colorNames[hex.toUpperCase()] || hex; // Default to hex if not found in map
+};
+
 const SearchItemsPage = () => {
   const [filters, setFilters] = useState({
     searchText: "",
@@ -9,7 +26,7 @@ const SearchItemsPage = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [categories, setCategories] = useState([
+  const [categories] = useState([
     "Personal Items",
     "Electronics",
     "Clothing",
@@ -22,7 +39,7 @@ const SearchItemsPage = () => {
   ]);
 
   useEffect(() => {
-    if (filters.searchText) {
+    if (filters.searchText || filters.category) {
       handleSearch();
     }
   }, [filters]);
@@ -94,8 +111,61 @@ const SearchItemsPage = () => {
                   <strong>Location:</strong> {item.location}
                 </p>
                 <p>
+                  <strong>Status:</strong> {item.status}
+                </p>
+                <p>
                   <strong>Category:</strong> {item.category || "Uncategorized"}
                 </p>
+                <p>
+                  <strong>Color:</strong>{" "}
+                  {item.color ? hexToColorName(item.color) : "N/A"}
+                </p>
+                <p>
+                  <strong>Reported On:</strong>{" "}
+                  {new Date(item.dateTime).toLocaleString()}
+                </p>
+
+                {/* Display Pet-specific details */}
+                {item.category === "Pets" && (
+                  <>
+                    <p>
+                      <strong>Pet Type:</strong> {item.petType}
+                    </p>
+                    <p>
+                      <strong>Pet Age:</strong> {item.petAge}
+                    </p>
+                  </>
+                )}
+
+                {/* Display Vehicle-specific details */}
+                {item.category === "Vehicles" && (
+                  <>
+                    <p>
+                      <strong>Vehicle Type:</strong> {item.vehicleType}
+                    </p>
+                    <p>
+                      <strong>Make:</strong> {item.vehicleMake}
+                    </p>
+                    <p>
+                      <strong>Model:</strong> {item.vehicleModel}
+                    </p>
+                    <p>
+                      <strong>Vehicle Number:</strong> {item.vehicleNumber}
+                    </p>
+                  </>
+                )}
+
+                {/* Display image if available */}
+                {item.imageUrl && (
+                  <div>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="item-image"
+                      style={{ maxWidth: "200px", maxHeight: "200px" }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>

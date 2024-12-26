@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate } from "react-router-dom";
 import "../styles/ReportItemForm.css";
 
 const ReportLostItemPage = () => {
@@ -7,17 +7,15 @@ const ReportLostItemPage = () => {
   const [itemDescription, setItemDescription] = useState("");
   const [itemLocation, setItemLocation] = useState("");
   const [itemImage, setItemImage] = useState(null);
-  const [category, setCategory] = useState(""); // Category selection
-  const [color, setColor] = useState(""); // General color picker
-  const [date, setDate] = useState(""); // Date selection
-  const [time, setTime] = useState(""); // Time selection
+  const [category, setCategory] = useState("");
+  const [color, setColor] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [petType, setPetType] = useState("");
-  const [petDescription, setPetDescription] = useState("");
-  const [petLocation, setPetLocation] = useState("");
-  const [petContactInfo, setPetContactInfo] = useState("");
-  const [vehicleType, setVehicleType] = useState("");
+  const [petAge, setPetAge] = useState("");
   const [vehicleMake, setVehicleMake] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -30,6 +28,20 @@ const ReportLostItemPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation before submitting
+    if (
+      !itemName ||
+      !itemDescription ||
+      !itemLocation ||
+      !category ||
+      !color ||
+      !date ||
+      !time
+    ) {
+      setStatusMessage("Please fill out all required fields.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", itemName);
     formData.append("description", itemDescription);
@@ -39,20 +51,19 @@ const ReportLostItemPage = () => {
     formData.append("date", date);
     formData.append("time", time);
 
-    if (category === "Pets") {
-      formData.append("petType", petType);
-      formData.append("petDescription", petDescription);
-      formData.append("petLocation", petLocation);
-      formData.append("petContactInfo", petContactInfo);
-    } else if (category === "Vehicles") {
-      formData.append("vehicleType", vehicleType);
-      formData.append("vehicleMake", vehicleMake);
-      formData.append("vehicleModel", vehicleModel);
-      formData.append("vehicleNumber", vehicleNumber);
-    }
-
     if (itemImage) {
       formData.append("image", itemImage);
+    }
+
+    // Add additional fields based on category
+    if (category === "Pets") {
+      formData.append("petType", petType);
+      formData.append("petAge", petAge);
+    } else if (category === "Vehicles") {
+      formData.append("vehicleMake", vehicleMake);
+      formData.append("vehicleModel", vehicleModel);
+      formData.append("vehicleType", vehicleType);
+      formData.append("vehicleNumber", vehicleNumber);
     }
 
     try {
@@ -67,15 +78,12 @@ const ReportLostItemPage = () => {
       if (response.status === 201) {
         setStatusMessage("Lost item reported successfully!");
         setIsSuccess(true);
-        setTimeout(() => {
-          navigate("/"); // Redirect to home page
-        }, 2000); // 2-second delay before redirection
+        setTimeout(() => navigate("/"), 2000);
       } else {
         const message = await response.text();
         setStatusMessage(message);
       }
     } catch (error) {
-      console.error("Error reporting lost item:", error);
       setStatusMessage("Error reporting lost item.");
     }
   };
@@ -166,7 +174,7 @@ const ReportLostItemPage = () => {
           />
         </label>
 
-        {/* Category-specific fields */}
+        {/* Conditional fields for Pets */}
         {category === "Pets" && (
           <>
             <label>
@@ -175,50 +183,31 @@ const ReportLostItemPage = () => {
                 type="text"
                 value={petType}
                 onChange={(e) => setPetType(e.target.value)}
+                required
               />
             </label>
             <label>
-              Pet Description:
-              <textarea
-                value={petDescription}
-                onChange={(e) => setPetDescription(e.target.value)}
-              />
-            </label>
-            <label>
-              Pet Location:
+              Pet Age:
               <input
-                type="text"
-                value={petLocation}
-                onChange={(e) => setPetLocation(e.target.value)}
-              />
-            </label>
-            <label>
-              Pet Contact Info:
-              <input
-                type="text"
-                value={petContactInfo}
-                onChange={(e) => setPetContactInfo(e.target.value)}
+                type="number"
+                value={petAge}
+                onChange={(e) => setPetAge(e.target.value)}
+                required
               />
             </label>
           </>
         )}
 
+        {/* Conditional fields for Vehicles */}
         {category === "Vehicles" && (
           <>
-            <label>
-              Vehicle Type:
-              <input
-                type="text"
-                value={vehicleType}
-                onChange={(e) => setVehicleType(e.target.value)}
-              />
-            </label>
             <label>
               Vehicle Make:
               <input
                 type="text"
                 value={vehicleMake}
                 onChange={(e) => setVehicleMake(e.target.value)}
+                required
               />
             </label>
             <label>
@@ -227,22 +216,38 @@ const ReportLostItemPage = () => {
                 type="text"
                 value={vehicleModel}
                 onChange={(e) => setVehicleModel(e.target.value)}
+                required
               />
             </label>
             <label>
-              Vehicle Number:
+              Vehicle Type:
+              <select
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+                required
+              >
+                <option value="">Select Vehicle Type</option>
+                <option value="Car">Car</option>
+                <option value="Motorcycle">Motorcycle</option>
+                <option value="Truck">Truck</option>
+                <option value="Bicycle">Bicycle</option>
+              </select>
+            </label>
+            <label>
+              Vehicle Number (VIN or Registration Number):
               <input
                 type="text"
                 value={vehicleNumber}
                 onChange={(e) => setVehicleNumber(e.target.value)}
+                required
               />
             </label>
           </>
         )}
 
         <label>
-          Upload Image:
-          <input type="file" onChange={handleImageChange} />
+          Upload Image (Optional):
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </label>
 
         <button type="submit">Report Lost Item</button>

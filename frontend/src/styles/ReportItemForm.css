@@ -1,106 +1,107 @@
 /* Form Styles */
 .report-item-form {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #e0f7fa
+  ); /* Light teal gradient */
+  padding: 20px; /* Comfortable padding */
+  border-radius: 12px; /* Slightly more rounded corners */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
+  max-width: 500px;
   margin: 20px auto;
-  min-height: 70vh; /* Adjusted for a bit more height */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Prevent space between fields */
-  overflow: hidden; /* Prevent scrolling inside form */
+  gap: 15px; /* Balanced spacing between fields */
 }
 
 /* Header Styles */
 .report-item-form h2 {
   font-size: 2rem;
-  margin-bottom: 15px;
   text-align: center;
-  color: #333;
-  flex-shrink: 0; /* Prevents the header from shrinking */
-  font-weight: 600;
+  color: black;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 /* Form Fields */
 .report-item-form label {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 500;
+  color: #333;
   margin-bottom: 5px;
   display: block;
-  color: #555;
 }
 
-/* Inputs and Textarea */
 .report-item-form input,
 .report-item-form textarea,
 .report-item-form select {
-  padding: 12px 14px;
-  font-size: 1rem;
+  padding: 8px 10px;
+  font-size: 0.9rem;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 18px;
-  width: 100%; /* Ensure inputs stretch to fit container */
-  transition: all 0.3s ease; /* Smooth transitions */
+  border-radius: 5px;
+  margin-bottom: 8px;
+  width: 100%;
+  background-color: #f1f8e9; /* Soft green background */
+  transition: all 0.3s ease;
 }
 
-/* On focus input and select box border color change */
 .report-item-form input:focus,
 .report-item-form textarea:focus,
 .report-item-form select:focus {
-  border-color: #4caf50;
+  border-color: #45a049;
   outline: none;
-  box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0px 0px 6px rgba(69, 160, 73, 0.3);
 }
 
-/* Color Picker */
-.report-item-form input[type="color"] {
-  padding: 0;
-  border: none;
-  height: 36px;
-  width: 36px;
+/* Custom Color Picker Styling */
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between picker and label */
+}
+
+.color-picker-container label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.color-picker {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.report-item-form input[type="color"]:hover {
+  border: 2px solid #ddd;
   cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Elevated appearance */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Date and Time Inputs */
-.report-item-form input[type="date"],
-.report-item-form input[type="time"] {
-  padding: 12px 14px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease;
+.color-picker:hover {
+  transform: scale(1.2); /* Slight enlarge on hover */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-.report-item-form input[type="date"]:focus,
-.report-item-form input[type="time"]:focus {
-  border-color: #4caf50;
-  outline: none;
-  box-shadow: 0px 0px 8px rgba(76, 175, 80, 0.3);
-}
-
-/* Button Styling */
+/* Centering and Styling Button */
 .report-item-form button {
-  background-color: #4caf50;
+  background-color: #45a049;
   color: white;
-  padding: 15px;
+  padding: 10px 15px;
   border: none;
   border-radius: 6px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
-  width: 100%; /* Button stretches to fill the form width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 10px auto;
+  width: 50%;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .report-item-form button:hover {
-  background-color: #45a049;
-  transform: translateY(-2px); /* Smooth hover effect */
+  background-color: #3e913f;
+  transform: translateY(-2px);
 }
 
 /* Optional Status Message Styling */
@@ -109,9 +110,9 @@
   color: #721c24;
   padding: 10px;
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .status-message.success {
@@ -126,28 +127,24 @@
   border: 1px solid #f5c6cb;
 }
 
-/* Adjust the layout for smaller screens */
+/* Adjust layout for smaller screens */
 @media (max-width: 768px) {
   .report-item-form {
     padding: 15px;
-    min-height: 80vh; /* Allow a bit more height on smaller screens */
+    max-width: 90%;
   }
 
   .report-item-form h2 {
-    font-size: 1.6rem;
-  }
-
-  .report-item-form label {
-    font-size: 1rem;
+    font-size: 1.8rem;
   }
 
   .report-item-form input,
   .report-item-form textarea,
   .report-item-form select {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 
   .report-item-form button {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 }
